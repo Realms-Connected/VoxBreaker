@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@rbxts/services": "^1.6.0",
+    "@rbxts/signal": "^1.1.1",
+    "@rbxts/types": "^1.0.907",
+    "roblox-ts": "^3.0.0-dev-9165cde"
+  }
+}
