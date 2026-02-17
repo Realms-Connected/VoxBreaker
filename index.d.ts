@@ -13,7 +13,7 @@ interface Hitbox
 
     GetTouchingParts(): void,
 
-    WeldTo(): void,
+    WeldTo(to: BasePart): void,
 
     UnWeld(): void,
 }
@@ -26,7 +26,7 @@ interface MoveableHitbox extends Hitbox
 export function VoxelizePart(partToVoxelize: Part, minimumVoxelSize: number, timeToReset: number): Voxel[]
 
 export function CreateMoveableHitbox(
-    minimumVoxelSize?: number, 
+    minimumVoxelSize?: number | "Relative",
     voxelResetTime?: number,
     hitboxSize?: Vector3, 
     hitboxCoordinate?: CFrame, 
@@ -38,14 +38,14 @@ export function CreateHitbox(
     hitboxSize?: Vector3,
     hitboxCoordinate?: CFrame,
     hitboxShape?: Enum.PartType,
-    minimumVoxelSize?: number,
+    minimumVoxelSize?: number | "Relative",
     voxelResetTime?: number,
     queryParameters?: OverlapParams,
 ): Voxel[]
 
 export function CutInHalf(partToCut: Part): [Part, Part]
 
-export const VoxbreakerSettings: {
+export const VoxBreakerSettings: {
     // The name of attribute that the module will check parts for.
     TagName: string 
     RandomColors: boolean  // Will make every part a random color. Set this to true if you want a visual representation of how the parts are being divided.

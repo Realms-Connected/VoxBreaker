@@ -212,10 +212,10 @@ VoxBreaker.__index = VoxBreaker
 -----[ SETTINGS ]-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 local VoxBreakerSettings = {};
-VoxbreakerSettings.TagName = "Destroyable" --Name of Attribute that module will check parts for
+VoxBreakerSettings.TagName = "Destroyable" --Name of Attribute that module will check parts for
 VoxBreakerSettings.RandomColors = false  -- Will make every part a random color. Set this to true if you want a visual representation of how the parts are being divided.
 VoxBreakerSettings.Visualizer = false -- Will make hitboxes visible when set to true
-VoxBreakerSettings.miniumCubeSize = 5 --Default Minimum possible size that divided cubes can be.
+VoxBreakerSettings.minimumCubeSize = 5 --Default Minimum possible size that divided cubes can be.
 VoxBreakerSettings.voxelFolder = workspace --Where the voxels are stored. Workspace by default.
 VoxBreakerSettings.AutoStartMoveable = false --Toggle this to true if you want your moveable hitboxes to activate automatically without having to use :Start()
 VoxBreakerSettings.PartCacheEnabled = true --Enables PartCache. This significantly improves performance so I reccommend keeping it on. 
@@ -310,7 +310,10 @@ local function CopyProperties(PartOne:Part,PartTwo:Part)
 	PartTwo.FrontSurface = PartOne.FrontSurface
 
 
-	PartTwo:SetAttribute(VoxbreakerSettings.TagName,PartOne:GetAttribute(TagName))
+	-- PartTwo:SetAttribute(VoxBreakerSettings.TagName,PartOne:GetAttribute(TagName))
+	if (PartOne:HasTag(VoxBreakerSettings.TagName)) then
+		PartTwo:AddTag(VoxBreakerSettings.TagName)
+	end
 
 
 	for i,v in PartOne:GetChildren() do
@@ -435,7 +438,8 @@ local function CutPartinHalf(block : Part, TimeToReset : number) --Cuts part int
 	block.Transparency = 1
 	block.CanCollide = false
 	block.CanQuery = false
-	block:SetAttribute(VoxbreakerSettings.TagName,false)
+	-- block:SetAttribute(VoxBreakerSettings.TagName,false)
+	block:RemoveTag(VoxBreakerSettings.TagName)
 
 
 
@@ -482,7 +486,8 @@ local function CutPartinHalf(block : Part, TimeToReset : number) --Cuts part int
 				block.CanCollide = block:GetAttribute("Collide")
 			end
 
-			block:SetAttribute(VoxbreakerSettings.TagName,true)
+			-- block:SetAttribute(VoxBreakerSettings.TagName,true)
+			block:AddTag(VoxBreakerSettings.TagName)
 		end
 	end)
 
@@ -534,7 +539,7 @@ local function DivideBlock(block : Part, MinimumVoxelSize : number, Parent : Ins
 	--You CANNOT change the size of the resulting parts. They are dependent on the size of the original part.
 
 	local partTable:{Part} = {} -- Table of parts to be returned
-	local minimum = MinimumVoxelSize or VoxBreakerSettings.miniumCubeSize
+	local minimum = MinimumVoxelSize or VoxBreakerSettings.minimumCubeSize
 
 
 	if block.Size.X > minimum or block.Size.Y > minimum or block.Size.Z > minimum then
@@ -605,7 +610,7 @@ local function DivideBlock(block : Part, MinimumVoxelSize : number, Parent : Ins
 					else
 						clone = block:Clone()
 					end
-					clone:SetAttribute("Voxel",true)
+					clone:AddTag("Voxel")
 					if VoxBreakerSettings.RandomColors then
 						clone.Color = Color3.fromRGB(math.random(1,255),math.random(1,255),math.random(1,255))
 					end
@@ -657,7 +662,7 @@ local function DivideBlock(block : Part, MinimumVoxelSize : number, Parent : Ins
 					else
 						clone = block:Clone()
 					end
-					clone:SetAttribute("Voxel",true)
+					clone:AddTag("Voxel")
 					if VoxBreakerSettings.RandomColors then
 						clone.Color = Color3.fromRGB(math.random(1,255),math.random(1,255),math.random(1,255))
 					end
@@ -709,7 +714,7 @@ local function DivideBlock(block : Part, MinimumVoxelSize : number, Parent : Ins
 					else
 						clone = block:Clone()
 					end
-					clone:SetAttribute("Voxel",true)
+					clone:AddTag("Voxel")
 					if VoxBreakerSettings.RandomColors then
 						clone.Color = Color3.fromRGB(math.random(1,255),math.random(1,255),math.random(1,255))
 					end
@@ -794,7 +799,8 @@ local function DivideBlock(block : Part, MinimumVoxelSize : number, Parent : Ins
 				block.Transparency = 1
 				block.CanCollide = false
 				block.CanQuery = false
-				block:SetAttribute(VoxbreakerSettings.TagName,false)
+				-- block:SetAttribute(VoxBreakerSettings.TagName,false)
+				block:RemoveTag(VoxBreakerSettings.TagName)
 
 				for i,v in block:GetChildren() do
 					task.spawn(function()
@@ -842,7 +848,8 @@ local function DivideBlock(block : Part, MinimumVoxelSize : number, Parent : Ins
 						end
 
 
-						block:SetAttribute(VoxbreakerSettings.TagName,true)
+						-- block:SetAttribute(VoxBreakerSettings.TagName,true)
+						block:AddTag(VoxBreakerSettings.TagName)
 					end
 				end)
 
@@ -857,7 +864,7 @@ local function DivideBlock(block : Part, MinimumVoxelSize : number, Parent : Ins
 
 
 
-	elseif block.Parent:GetAttribute("VoxelHolder") == nil and block:GetAttribute("Voxel") == nil then
+	elseif block.Parent:GetAttribute("VoxelHolder") == nil and block:HasTag("Voxel") == false then
 
 		if block:GetAttribute("Transparency") then
 			block.Transparency = block:GetAttribute("Transparency")
@@ -893,7 +900,8 @@ local function DivideBlock(block : Part, MinimumVoxelSize : number, Parent : Ins
 		block.Transparency = 1
 		block.CanCollide = false
 		block.CanQuery = false
-		block:SetAttribute(VoxbreakerSettings.TagName,false)
+		-- block:SetAttribute(VoxBreakerSettings.TagName,false)
+		block:RemoveTag(VoxBreakerSettings.TagName)
 
 
 		for i,v in block:GetChildren() do
@@ -932,7 +940,8 @@ local function DivideBlock(block : Part, MinimumVoxelSize : number, Parent : Ins
 				block.CanCollide = block:GetAttribute("Collide")
 			end
 
-			block:SetAttribute(VoxbreakerSettings.TagName,true)
+			-- block:SetAttribute(VoxBreakerSettings.TagName,true)
+			block:AddTag(VoxBreakerSettings.TagName)
 		end)
 
 
@@ -958,7 +967,7 @@ local function GetTouchingParts(part : BasePart, Params : OverlapParams) --Used 
 
 	for i,v in pairs(touching) do
 		if v:IsA("Part") then
-			if v:GetAttribute(VoxbreakerSettings.TagName) == true then
+			if v:HasTag(VoxBreakerSettings.TagName) == true then
 				table.insert(results,v)
 			end
 		end
@@ -1008,7 +1017,7 @@ function VoxBreaker:CreateHitbox(Size : Vector3 | string, Cframe : CFrame , Shap
 
 	local size = Size or DefaultSize
 	local shape = Shape or DefaultShape
-	local minimum = MinimumVoxelSize or VoxBreakerSettings.miniumCubeSize
+	local minimum = MinimumVoxelSize or VoxBreakerSettings.minimumCubeSize
 	local timetoreset = TimeToReset or DefaultTimeToReset
 
 
@@ -1035,6 +1044,8 @@ function VoxBreaker:CreateHitbox(Size : Vector3 | string, Cframe : CFrame , Shap
 	part.CanCollide = false
 	part.Material = Enum.Material.Neon
 	part.Color = Color3.fromRGB(255, 0, 0)
+	
+	part.CanQuery = false;
 
 	if MinimumVoxelSize == "Relative" then
 		local ratio = 1/3
@@ -1058,7 +1069,7 @@ function VoxBreaker:CreateHitbox(Size : Vector3 | string, Cframe : CFrame , Shap
 		partTable = GetTouchingParts(part,Params)
 
 		for i, v in pairs(partTable) do
-			if v:IsA("Part") and v:GetAttribute(VoxbreakerSettings.TagName) then			
+			if v:IsA("Part") and v:HasTag(VoxBreakerSettings.TagName) then			
 				if math.floor(v.Size.X) > minimum or math.floor(v.Size.Y) > minimum or math.floor(v.Size.Z) > minimum then
 					check = false
 				end
@@ -1069,7 +1080,7 @@ function VoxBreaker:CreateHitbox(Size : Vector3 | string, Cframe : CFrame , Shap
 
 		if check == false then
 			for i, v in pairs(partTable) do
-				if v:IsA("Part") and v:GetAttribute(VoxbreakerSettings.TagName) then
+				if v:IsA("Part") and v:HasTag(VoxBreakerSettings.TagName) then
 
 					DivideBlock( v , minimum , nil , timetoreset)
 
@@ -1111,7 +1122,7 @@ function VoxBreaker.CreateMoveableHitbox(MinimumVoxelSize : number | string, Tim
 
 	local size = Size or DefaultSize
 	local shape = Shape or  DefaultShape
-	local minimum = MinimumVoxelSize or VoxBreakerSettings.miniumCubeSize
+	local minimum = MinimumVoxelSize or VoxBreakerSettings.minimumCubeSize
 	local timetoreset = TimeToReset or DefaultTimeToReset
 
 	local part
@@ -1141,6 +1152,7 @@ function VoxBreaker.CreateMoveableHitbox(MinimumVoxelSize : number | string, Tim
 	part.CanCollide = false
 	part.Material = Enum.Material.Neon
 	part.Color = Color3.fromRGB(255, 0, 0)
+	part.CanQuery = false;
 
 	if VoxBreakerSettings.Visualizer then
 		part.Parent = game.Workspace
@@ -1169,7 +1181,7 @@ function VoxBreaker.CreateMoveableHitbox(MinimumVoxelSize : number | string, Tim
 
 							for i, v in pairs(touching) do
 
-								if v:IsA("Part") and v:GetAttribute(VoxbreakerSettings.TagName) then
+								if v:IsA("Part") and v:HasTag(VoxBreakerSettings.TagName) then
 
 									DivideBlock( v , minimum , nil , timetoreset)
 
@@ -1188,7 +1200,7 @@ function VoxBreaker.CreateMoveableHitbox(MinimumVoxelSize : number | string, Tim
 							end
 
 							for i, v in pairs(partTable) do
-								if v:IsA("Part") and v:GetAttribute(VoxbreakerSettings.TagName) then			
+								if v:IsA("Part") and v:HasTag(VoxBreakerSettings.TagName) then			
 									if math.floor(v.Size.X) > minimum or math.floor(v.Size.Y) > minimum or math.floor(v.Size.Z) > minimum then
 										check = false
 									end
@@ -1248,7 +1260,7 @@ function VoxBreaker.CreateMoveableHitbox(MinimumVoxelSize : number | string, Tim
 
 							for i, v in pairs(touching) do
 
-								if v:IsA("Part") and v:GetAttribute(VoxbreakerSettings.TagName) then
+								if v:IsA("Part") and v:HasTag(VoxBreakerSettings.TagName) then
 
 									DivideBlock( v , minimum , nil , timetoreset)
 
@@ -1267,7 +1279,7 @@ function VoxBreaker.CreateMoveableHitbox(MinimumVoxelSize : number | string, Tim
 							end
 
 							for i, v in pairs(partTable) do
-								if v:IsA("Part") and v:GetAttribute(VoxbreakerSettings.TagName) then			
+								if v:IsA("Part") and v:HasTag(VoxBreakerSettings.TagName) then			
 									if math.floor(v.Size.X) > minimum or math.floor(v.Size.Y) > minimum or math.floor(v.Size.Z) > minimum then
 										check = false
 									end
