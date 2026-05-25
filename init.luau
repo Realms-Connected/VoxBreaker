@@ -213,10 +213,19 @@ VoxBreaker.__index = VoxBreaker
 
 local VoxBreakerSettings = {};
 VoxBreakerSettings.TagName = "Destroyable" --Name of Attribute that module will check parts for
-VoxBreakerSettings.RandomColors = false  -- Will make every part a random color. Set this to true if you want a visual representation of how the parts are being divided.
-VoxBreakerSettings.Visualizer = false -- Will make hitboxes visible when set to true
+VoxBreakerSettings.RandomColors = true  -- Will make every part a random color. Set this to true if you want a visual representation of how the parts are being divided.
+VoxBreakerSettings.Visualizer = true -- Will make hitboxes visible when set to true
 VoxBreakerSettings.minimumCubeSize = 5 --Default Minimum possible size that divided cubes can be.
-VoxBreakerSettings.voxelFolder = workspace:WaitForChild("Voxels") --Where the voxels are stored. Workspace by default.
+do
+	local vf;
+	if game:GetService("RunService"):IsClient() then 
+		vf = workspace:WaitForChild("Voxels") --Where the voxels are stored. Workspace by default.
+	else 
+		vf = workspace:FindFirstChild("Voxels") or Instance.new("Folder", workspace);
+		task.spawn(function() vf.Name = "Voxels" end)
+	end;
+	VoxBreakerSettings.voxelFolder = vf;
+end
 VoxBreakerSettings.AutoStartMoveable = false --Toggle this to true if you want your moveable hitboxes to activate automatically without having to use :Start()
 VoxBreakerSettings.PartCacheEnabled = true --Enables PartCache. This significantly improves performance so I reccommend keeping it on. 
 
